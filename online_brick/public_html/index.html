@@ -54,29 +54,29 @@
             var rect_margin = 20;
             //球半径
             var circle_width = 40;
-            
-            
-            var log = function(str){
+
+
+            var _log = function (str) {
                 console.log(str)
             }
             /*
              * 板块的构造函数
              */
-            function RectClass(rect){
+            function RectClass(rect) {
                 this.rect = rect;
             }
             /*
              * 原型移动方法
              */
-            RectClass.prototype.move = function(attent){
+            RectClass.prototype.move = function (attent) {
                 var move_left = 0;
-                if(attent == "left"){
-                }else if(attent == "right"){
+                if (attent == "left") {
+                } else if (attent == "right") {
                     move_left = content_width - this.rect.getWidth();
-                }else{
+                } else {
                     return false;
                 }
-                this.rect.animate('left',move_left, {
+                this.rect.animate('left', move_left, {
                     duration: 600,
                     onChange: canvas.renderAll.bind(canvas),
                     onComplete: function () {
@@ -84,82 +84,105 @@
                     easing: fabric.util.ease["easeInQuad"]
                 });
             }
-            
-            
+
+
             /*
              * 球构造函数
              */
-            function CircleClass(ball){
+            function CircleClass(ball) {
                 this.ball = ball;
             }
             /*
              * 球移动方法
              */
-            CircleClass.prototype.move = function(){
-                
+            CircleClass.prototype.move = function () {
+
             }
-            
-            //我的板
-            var rect1 = new fabric.Rect({
-                width: rect_width,
-                height: rect_height,
-                left: (content_width - rect_width)/2,
-                top: (content_height - rect_height - rect_margin),
-                stroke: '#aaf',
-                strokeWidth: 2,
-                fill: '#faa',
-                selectable: false
-            });
-            //对手的板
-            var rect2 = new fabric.Rect({
-                width: rect_width,
-                height: rect_height,
-                left: (content_width - rect_width)/2,
-                top: rect_margin,
-                stroke: '#aaf',
-                strokeWidth: 2,
-                fill: '#faa',
-                selectable: false
-            });
-            var ball1 =  new fabric.Circle({ 
-                top: 240, 
-                left: 230, 
-                radius: circle_width, 
-                stroke: '#aaf',
-                fill: '#faa',
-                selectable: false
-            });
-            
-            /*
-             * 添加到容器
-             */
-            canvas.add(rect1);
-            canvas.add(rect2);
-            canvas.add(ball1);
-            
-            /*
-             * 注入到构造函数，创建出自定义的对象
-             */
-            var my_rect = new RectClass(rect1);
-            var his_rect = new RectClass(rect2);
-            var ball = new CircleClass(ball1);
-            
-            
-            
-            
-            /*
-             * 触摸监听
-             */
-            $content.on("touchstart", function (event) {
-                var x = event.changedTouches[0].clientX;
-                if(x>(content_width/2)){
-                    my_rect.move("right");
-                }else{
-                    my_rect.move("left");
+
+            window.GameClass = function () {
+
+                var _build = function () {
+                    //我的板
+                    var rect1 = new fabric.Rect({
+                        width: rect_width,
+                        height: rect_height,
+                        left: (content_width - rect_width) / 2,
+                        top: (content_height - rect_height - rect_margin),
+                        stroke: '#aaf',
+                        strokeWidth: 2,
+                        fill: '#faa',
+                        selectable: false
+                    });
+                    //对手的板
+                    var rect2 = new fabric.Rect({
+                        width: rect_width,
+                        height: rect_height,
+                        left: (content_width - rect_width) / 2,
+                        top: rect_margin,
+                        stroke: '#aaf',
+                        strokeWidth: 2,
+                        fill: '#faa',
+                        selectable: false
+                    });
+                    var ball1 = new fabric.Circle({
+                        top: 240,
+                        left: 230,
+                        radius: circle_width,
+                        stroke: '#aaf',
+                        fill: '#faa',
+                        selectable: false
+                    });
+
+                    /*
+                     * 添加到容器
+                     */
+                    canvas.add(rect1);
+                    canvas.add(rect2);
+                    canvas.add(ball1);
+
+                    /*
+                     * 注入到构造函数，创建出自定义的对象
+                     */
+                    this.my_rect = new RectClass(rect1);
+                    this.his_rect = new RectClass(rect2);
+                    this.ball = new CircleClass(ball1);
+
                 }
-                
-            });
+
+                var _start_event = function () {
+
+                    /*
+                     * 触摸监听
+                     */
+                    $content.on("touchstart", function (event) {
+                        var x = event.changedTouches[0].clientX;
+                        if (x > (content_width / 2)) {
+                            my_rect.move("right");
+                        } else {
+                            my_rect.move("left");
+                        }
+
+                    });
+                }
+
+                this.start = function () {
+                    _build();
+                    _start_event();
+                }
+            }
+
+
+
+
+
         })();
+        
+        
+        $(function () {
+            window.game = new window.GameClass();
+            game.start();
+        })
+
     </script>
 
 </html>
