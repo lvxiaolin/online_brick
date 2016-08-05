@@ -154,20 +154,21 @@
                     /*
                      * 触摸监听
                      */
+                    var that = this;
                     $content.on("touchstart", function (event) {
                         var x = event.changedTouches[0].clientX;
                         if (x > (content_width / 2)) {
-                            my_rect.move("right");
+                            that.my_rect.move("right");
                         } else {
-                            my_rect.move("left");
+                            that.my_rect.move("left");
                         }
 
                     });
                 }
 
                 this.start = function () {
-                    _build();
-                    _start_event();
+                    _build.call(this);
+                    _start_event.call(this);
                 }
             }
 
