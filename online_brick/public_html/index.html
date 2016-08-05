@@ -59,6 +59,46 @@
             var log = function(str){
                 console.log(str)
             }
+            /*
+             * 板块的构造函数
+             */
+            function RectClass(rect){
+                this.rect = rect;
+            }
+            /*
+             * 原型移动方法
+             */
+            RectClass.prototype.move = function(attent){
+                var move_left = 0;
+                if(attent == "left"){
+                }else if(attent == "right"){
+                    move_left = content_width - this.rect.getWidth();
+                }else{
+                    return false;
+                }
+                this.rect.animate('left',move_left, {
+                    duration: 600,
+                    onChange: canvas.renderAll.bind(canvas),
+                    onComplete: function () {
+                    },
+                    easing: fabric.util.ease["easeInQuad"]
+                });
+            }
+            
+            
+            /*
+             * 球构造函数
+             */
+            function CircleClass(ball){
+                this.ball = ball;
+            }
+            /*
+             * 球移动方法
+             */
+            CircleClass.prototype.move = function(){
+                
+            }
+            
             //我的板
             var rect1 = new fabric.Rect({
                 width: rect_width,
@@ -81,7 +121,7 @@
                 fill: '#faa',
                 selectable: false
             });
-            var ball =  new fabric.Circle({ 
+            var ball1 =  new fabric.Circle({ 
                 top: 240, 
                 left: 230, 
                 radius: circle_width, 
@@ -90,24 +130,34 @@
                 selectable: false
             });
             
+            /*
+             * 添加到容器
+             */
             canvas.add(rect1);
             canvas.add(rect2);
-            canvas.add(ball);
-
+            canvas.add(ball1);
+            
+            /*
+             * 注入到构造函数，创建出自定义的对象
+             */
+            var my_rect = new RectClass(rect1);
+            var his_rect = new RectClass(rect2);
+            var ball = new CircleClass(ball1);
+            
+            
+            
+            
+            /*
+             * 触摸监听
+             */
             $content.on("touchstart", function (event) {
                 var x = event.changedTouches[0].clientX;
                 if(x>(content_width/2)){
-                    var move_left = content_width - rect_width;
+                    my_rect.move("right");
                 }else{
-                    var move_left = 0;
+                    my_rect.move("left");
                 }
-                rect1.animate('left',move_left, {
-                    duration: 600,
-                    onChange: canvas.renderAll.bind(canvas),
-                    onComplete: function () {
-                    },
-                    easing: fabric.util.ease["easeInQuad"]
-                });
+                
             });
         })();
     </script>
