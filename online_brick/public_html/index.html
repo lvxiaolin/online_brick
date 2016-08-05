@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content=" user-scalable=no, width=640">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta content="telephone=no" name="format-detection" />
+        <!-- UC强制全屏 -->
+        <meta name="full-screen" content="yes">
+        <!-- QQ强制全屏 -->
+        <meta name="x5-fullscreen" content="true">
+        <!-- UC应用模式 -->
+        <meta name="browsermode" content="application">
+        <!-- QQ应用模式 -->
+        <meta name="x5-page-mode" content="app">
+        <script src="../js/fabric.js" ></script>
+        <script src="../js/zepto.min.js" ></script>
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
+            }
+            body{
+                font:normal 14px/1.5 Tahoma,"Lucida Grande",Verdana,"Microsoft Yahei",STXihei,hei;
+                width: 100%;
+            }
+            .canvas_content{
+                width: 640px;
+                height: 1136px;
+                margin: 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="canvas_content" class="canvas_content">
+            <canvas id="c" width="640" height="1136"></canvas>
+        </div>
+    </body>
+    <script>
+        (function () {
+            var canvas = this.__canvas = new fabric.Canvas('c');
+            var $content = $('#canvas_content');
+            //页面宽
+            var content_width = $('#canvas_content').width();
+            //页面高
+            var content_height = $('#canvas_content').height();
+            //板长
+            var rect_width = 170;
+            //板高
+            var rect_height = 20;
+            //板据顶间距
+            var rect_margin = 20;
+            //球半径
+            var circle_width = 40;
+            
+            
+            var log = function(str){
+                console.log(str)
+            }
+            //我的板
+            var rect1 = new fabric.Rect({
+                width: rect_width,
+                height: rect_height,
+                left: (content_width - rect_width)/2,
+                top: (content_height - rect_height - rect_margin),
+                stroke: '#aaf',
+                strokeWidth: 2,
+                fill: '#faa',
+                selectable: false
+            });
+            //对手的板
+            var rect2 = new fabric.Rect({
+                width: rect_width,
+                height: rect_height,
+                left: (content_width - rect_width)/2,
+                top: rect_margin,
+                stroke: '#aaf',
+                strokeWidth: 2,
+                fill: '#faa',
+                selectable: false
+            });
+            var ball =  new fabric.Circle({ 
+                top: 240, 
+                left: 230, 
+                radius: circle_width, 
+                stroke: '#aaf',
+                fill: '#faa',
+                selectable: false
+            });
+            
+            canvas.add(rect1);
+            canvas.add(rect2);
+            canvas.add(ball);
+
+            $content.on("touchstart", function (event) {
+                var x = event.changedTouches[0].clientX;
+                if(x>(content_width/2)){
+                    var move_left = content_width - rect_width;
+                }else{
+                    var move_left = 0;
+                }
+                rect1.animate('left',move_left, {
+                    duration: 600,
+                    onChange: canvas.renderAll.bind(canvas),
+                    onComplete: function () {
+                    },
+                    easing: fabric.util.ease["easeInQuad"]
+                });
+            });
+        })();
+    </script>
+
+</html>
